@@ -29,7 +29,7 @@ class SpeechToTextManager:
         text_result = speech_recognition_result.text
 
         if speech_recognition_result.reason == speechsdk.ResultReason.RecognizedSpeech:
-            print("Recognized: {}".format(speech_recognition_result.text) + "\n\n[wheat1]If thats all press P to get a response")
+            print("Recognized: {}".format(speech_recognition_result.text))
         elif speech_recognition_result.reason == speechsdk.ResultReason.NoMatch:
             print("No speech could be recognized: {}".format(speech_recognition_result.no_match_details))
         elif speech_recognition_result.reason == speechsdk.ResultReason.Canceled:
@@ -51,7 +51,7 @@ class SpeechToTextManager:
         speech_recognition_result = self.azure_speechrecognizer.recognize_once_async().get()
 
         if speech_recognition_result.reason == speechsdk.ResultReason.RecognizedSpeech:
-            print("Recognized: \n {}".format(speech_recognition_result.text) + "\n\n[wheat1]If thats all press P to get a response")
+            print("Recognized: \n {}".format(speech_recognition_result.text))
         elif speech_recognition_result.reason == speechsdk.ResultReason.NoMatch:
             print("No speech could be recognized: {}".format(speech_recognition_result.no_match_details))
         elif speech_recognition_result.reason == speechsdk.ResultReason.Canceled:
@@ -69,7 +69,8 @@ class SpeechToTextManager:
 
         done = False
         def stop_cb(evt):
-            print('CLOSING on {}'.format(evt))
+            #Optional info for closing
+            #print('CLOSING on {}'.format(evt))
             nonlocal done
             done = True
 
@@ -117,14 +118,17 @@ class SpeechToTextManager:
         #    print('RECOGNIZING: {}'.format(evt))
         #self.azure_speechrecognizer.recognizing.connect(recognizing_cb)
 
-        # Optional callback to print out whenever a chunk of speech is finished being recognized. Make sure to let this finish before ending the speech recognition.
+        # Commit message: CHANGED EVT to EVT.result.text to just output text. Optional callback to print out whenever a chunk of speech is finished being recognized. Make sure to let this finish before ending the speech recognition.
         def recognized_cb(evt: speechsdk.SpeechRecognitionEventArgs):
-            print('RECOGNIZED: {}'.format(evt) + "\n\n[wheat1]If thats all press P to get a response")
+            recognized_text = evt.result.text
+            print("RECOGNIZED: "+ "[light_cyan1]" + recognized_text)
         self.azure_speechrecognizer.recognized.connect(recognized_cb)
+
 
         # We register this to fire if we get a session_stopped or cancelled event.
         def stop_cb(evt: speechsdk.SessionEventArgs):
-            print('CLOSING speech recognition on {}'.format(evt))
+            #Optional info for closing
+            #print('CLOSING speech recognition on {}'.format(evt))
             nonlocal done
             done = True
 
@@ -144,12 +148,12 @@ class SpeechToTextManager:
         # Call stop_continuous_recognition_async() to stop recognition.
         result_future = self.azure_speechrecognizer.start_continuous_recognition_async()
         result_future.get()  # wait for voidfuture, so we know engine initialization is done.
-        print('Continuous Speech Recognition is now running, say something.')
+        print('Continuous Speech Recognition is now running, press [green]P[/green] to end the conversation, now [green]say something:')
 
         while not done:
             # METHOD 1 - Press the stop key. This is 'p' by default but user can provide different key
             if keyboard.read_key() == stop_key:
-                print("\nEnding azure speech recognition\n")
+                print("\nEnding azure speech recognition")
                 self.azure_speechrecognizer.stop_continuous_recognition_async()
                 break
             
@@ -167,7 +171,7 @@ class SpeechToTextManager:
             # Can't exit function or speech_recognizer will go out of scope and be destroyed while running.
 
         final_result = " ".join(all_results).strip()
-        print(f"\n\nHeres the result we got!\n\n{final_result}\n\n")
+        print(f"Heres the result we got!\n\n" + "[light_cyan1]" + final_result + "\n")
         return final_result
 
 
