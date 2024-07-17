@@ -44,15 +44,15 @@ class OpenAiManager:
             return
 
         #TODO: model change may cause error
-        print("[yellow]\nAsking ChatGPT a question...")
+        print("[yellow]Asking ChatGPT a question...")
         completion = self.client.chat.completions.create(
-          model="gpt-3.5",
+          model="gpt-3.5-turbo",
           messages=chat_question
         )
 
         # Process the answer
         openai_answer = completion.choices[0].message.content
-        print(f"[green]\n{openai_answer}\n")
+        print(f"[light_cyan1]\n{openai_answer}\n")
         return openai_answer
 
     # Asks a question that includes the full conversation history
@@ -64,15 +64,15 @@ class OpenAiManager:
         # Add our prompt into the chat history
         self.chat_history.append({"role": "user", "content": prompt})
 
-        # Check total token limit. Remove old messages as needed
-        print(f"[coral]Chat History has a current token length of {num_tokens_from_messages(self.chat_history)}")
+        # Check total token limit. Remove old messages as needed. Don't really want to print that but could be neccesary
+        #print(f"[coral]Chat History has a current token length of {num_tokens_from_messages(self.chat_history)}")
         while num_tokens_from_messages(self.chat_history) > 8000:
             self.chat_history.pop(1) # We skip the 1st message since it's the system message
             print(f"Popped a message! New token length is: {num_tokens_from_messages(self.chat_history)}")
 
-        print("[yellow]\nAsking ChatGPT a question...")
+        print("[yellow]Asking ChatGPT a question...")
         completion = self.client.chat.completions.create(
-          model="gpt-4",
+          model="gpt-3.5-turbo",
           messages=self.chat_history
         )
 
@@ -81,7 +81,7 @@ class OpenAiManager:
 
         # Process the answer
         openai_answer = completion.choices[0].message.content
-        print(f"[green]\n{openai_answer}\n")
+        print(f"[light_cyan1]\n{openai_answer}")
         return openai_answer
    
 
