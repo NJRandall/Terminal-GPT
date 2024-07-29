@@ -13,6 +13,7 @@ class AudioManager:
         pygame.mixer.init(frequency=48000, buffer=1024) 
 
     def play_audio(self, file_path, sleep_during_playback=True, delete_file=False, play_using_music=True):
+        
         """
         Parameters:
         file_path (str): path to the audio file
@@ -20,7 +21,8 @@ class AudioManager:
         delete_file (bool): means file is deleted after playback (note that this shouldn't be used for multithreaded function calls)
         play_using_music (bool): means it will use Pygame Music, if false then uses pygame Sound instead
         """
-        print(f"Playing file with pygame: {file_path}")
+
+        print(f"\nPlaying file with pygame: {file_path}")
         if not pygame.mixer.get_init(): # Reinitialize mixer if needed
             pygame.mixer.init(frequency=48000, buffer=1024) 
         if play_using_music:

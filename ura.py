@@ -6,11 +6,11 @@ from openai_chat import OpenAiManager
 from eleven_labs import ElevenLabsManager
 from audio_player import AudioManager
 
-ELEVENLABS_VOICE = "Charlotte" # Replace this with the name of whatever voice you have created on Elevenlabs
+ELEVENLABS_VOICE = "Charlotte" # Replace this with the name of whatever voice on Elevenlabs
 
 BACKUP_FILE = "ChatHistoryBackup.txt"
 
-print("[thistle3]preparing start up sequence...\n")
+print("\n[dark_sea_green2]Program successfully booted.\n")
 
 print("Would you like audio output? Please enter 'y' for yes or 'n' for no:")
 
@@ -24,24 +24,24 @@ while True:
         voice_generation = False
         break
 
-print("[thistle3]initialising azureTTS...")
+print("[light_cyan1]connecting to azureTTS...")
 speechtotext_manager = SpeechToTextManager()
-print("[medium_orchid3]initialised azureTTS successfully")
+print("[steel_blue]connected to azureTTS successfully")
 
-print("[thistle3]initialising openAI...")
+print("[light_cyan1]connecting to openAI...")
 openai_manager = OpenAiManager()
-print("[medium_orchid3]initialised openAI successfully")
+print("[steel_blue]connected to openAI successfully")
 
 if voice_generation:
-    print("[thistle3]initialising elevenlabs...")
+    print("[light_cyan1]connecting to elevenlabs...")
     elevenlabs_manager = ElevenLabsManager()
-    print("[medium_orchid3]initialised elevenlabs successfully")
+    print("[steel_blue]connected to elevenlabs successfully")
     
-    print("[thistle3]initialising audio manager...")
+    print("[light_cyan1]preparing audio manager...")
     audio_manager = AudioManager()
-    print("[medium_orchid3]initialised audio manager")
+    print("[steel_blue]audio manager ready")
 
-
+# TODO: Seperate into seperate file and add as character value
 FIRST_SYSTEM_MESSAGE = {"role": "system", "content": '''
 You are Ura, an artifical assistant created to answer any questions a user might have.
 
@@ -55,11 +55,11 @@ While responding as Ura, you must obey the following rules:
 5. Keep your answers limited to just a few sentences.
 6. Do not use emojis or non standard unicode characters.
 
-                        
 Okay, let the conversation begin!'''}
 openai_manager.chat_history.append(FIRST_SYSTEM_MESSAGE)
 
 
+# Conversation main body
 print("\nStarting the loop, press 'F4' to begin")
 while True:
     # Wait until user presses "f4" key
@@ -84,11 +84,11 @@ while True:
         file.write(str(openai_manager.chat_history))
 
     if voice_generation:
-        # Send it to 11Labs to turn into cool audio
+        # Send it to 11Labs to turn into  audio
         elevenlabs_output = elevenlabs_manager.text_to_audio(openai_result, ELEVENLABS_VOICE, False)
 
         # Play the mp3 file
         audio_manager.play_audio(elevenlabs_output, True, True, True)
 
-    print("\n!!!!!!!!!!!!!!!\nFINISHED PROCESSING DIALOGUE.\nREADY FOR NEXT INPUT\nUse 'F4' to continue the conversation\n!!!!!!!!!!!!!!!\n")
+    print("\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\nFINISHED PROCESSING DIALOGUE.\nREADY FOR NEXT INPUT\nUse 'F4' to continue the conversation\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n")
     
