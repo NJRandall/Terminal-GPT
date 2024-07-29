@@ -70,7 +70,7 @@ class OpenAiManager:
             self.chat_history.pop(1) # We skip the 1st message since it's the system message
             print(f"Popped a message! New token length is: {num_tokens_from_messages(self.chat_history)}")
 
-        print("[yellow]Asking ChatGPT a question...")
+        print("[wheat1]Asking ChatGPT a question...")
         completion = self.client.chat.completions.create(
           model="gpt-3.5-turbo",
           messages=self.chat_history
