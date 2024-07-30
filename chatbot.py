@@ -1,5 +1,6 @@
 import time
 import keyboard
+import sys
 from rich import print
 from azure_speech_to_text import SpeechToTextManager
 from openai_chat import OpenAiManager
@@ -20,6 +21,7 @@ selectedProfile = input("Enter the name of desired profile: ").lower()
 
 print("\nWould you like audio output? Please enter 'y' for yes or 'n' for no:")
 
+#TODO: prevent key presses from appearing on the command line
 while True:
     if keyboard.is_pressed('y'):
         print("You entered 'yes'.\n")
@@ -47,31 +49,34 @@ if voice_generation:
     audio_manager = AudioManager()
     print("[steel_blue]audio manager ready")
 
-
-
 openai_manager.chat_history.append(FIRST_SYSTEM_MESSAGE)
 
-
 # Conversation main body
-# TODO: Add a text input function as an alternative input
-print("\nStarting the loop, press 'F4' to begin")
-while True:
-    # Wait until user presses "f4" key
-    if keyboard.read_key() != "f4":
+print("\nStarting the loop, press 'F4' for audio input or 'T' for text input:")
+
+while True:    
+    if keyboard.is_pressed('f4'):
+        print("User pressed 'F4' key! Now listening to your microphone:\n")
+        mic_result = speechtotext_manager.speechtotext_from_mic_continuous() # Get question from mic
+        if mic_result == '':
+            print("[red]Did not receive any input from your microphone!")
+            continue
+
+        openai_result = openai_manager.chat_with_history(mic_result)
+
+    elif keyboard.is_pressed('t'):
+        print("User pressed 'T' key!")
+        text_result = input("Ask {} a question: ".format(selectedProfile))
+        
+        openai_result = openai_manager.chat_with_history(text_result)
+
+    elif keyboard.is_pressed('esc'):
+        print("\n[hot_pink3]Terminating the chat...")
+        sys.exit()
+
+    else: # Wait until user presses a key
         time.sleep(0.1)
         continue
-
-    print("User pressed 'F4' key! Now listening to your microphone:\n")
-
-    # Get question from mic
-    mic_result = speechtotext_manager.speechtotext_from_mic_continuous()
-    
-    if mic_result == '':
-        print("[red]Did not receive any input from your microphone!")
-        continue
-
-    # Send question to OpenAi
-    openai_result = openai_manager.chat_with_history(mic_result)
     
     # Write the results to txt file as a backup
     with open(BACKUP_FILE, "w") as file:
@@ -84,5 +89,8 @@ while True:
         # Play the mp3 file
         audio_manager.play_audio(elevenlabs_output, True, True, True)
 
-    print("\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\nFINISHED PROCESSING DIALOGUE.\nREADY FOR NEXT INPUT\nUse 'F4' to continue the conversation\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n")
+    print("\n" + "~"*45)
+    print("FINISHED PROCESSING DIALOGUE.\nREADY FOR NEXT INPUT:\n")
+    print("Use 'F4' or 'T' to continue the conversation.\nOr use 'Esc' to terminate the program.")
+    print("~"*45)
     
