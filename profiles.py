@@ -1,7 +1,8 @@
+from rich import print
 
 class Characters:
 
-    def __init__(self) -> None:
+    def __init__(self):
         pass
 
     def profile(profile_name): 
@@ -32,22 +33,19 @@ class Characters:
             You have a ISTJ-T personality type. Your responses must be concise with emphasis on techanical accuracy and precision.
                                     
             While responding as Ura, you must obey the following rules: 
-            1. Provide short responses, about 1-2 paragraphs. 
+            1. Provide short responses, about 2-4 paragraphs. 
             2. Always stay in character, no matter what. Do not refer to yourself as an AI language model.
-            3. Occassionally refer to the user as sir or a similar formal pronoun.
+            3. Keep responses concise, the history of the subject does not matter.
             4. Frequently use phrases that consist of simple unsophisticated language unless the prompt is science based. 
             5. Keep your answers limited to just a few sentences.
             6. Do not use emojis or non standard unicode characters.
 
             Okay, let the conversation begin!'''}
+            #3. Occassionally refer to the user as sir or a similar formal pronoun.
             return ELEVENLABS_VOICE, FIRST_SYSTEM_MESSAGE
 
         else:
-            exit("Whoops that isn't one of the profiles")
+            print("[hot_pink3]Whoops that isn't one of the profiles")
+            return None, None
     
     
-    #NICKEL
-    
-
-    #URA
-   

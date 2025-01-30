@@ -14,21 +14,25 @@ personalities = ["[green]Nickel", "[green]Ura"]
 
 print("\n[dark_sea_green2]Program successfully booted.\n")
 
-#TODO: Rename variable
+#TODO: improve varible variable
 print("Avaliable personalities: "+ ", ".join(personalities))
-selectedProfile = input("Enter the name of desired profile: ").lower()
-[ELEVENLABS_VOICE, FIRST_SYSTEM_MESSAGE] = Characters.profile(selectedProfile)
 
-print("\nWould you like audio output? Please enter 'y' for yes or 'n' for no:")
+while True:
+    selectedProfile = input("Enter the name of desired profile: ").lower()
+    [ELEVENLABS_VOICE, FIRST_SYSTEM_MESSAGE] = Characters.profile(selectedProfile)
+    if ELEVENLABS_VOICE != None:
+        break
+
+print("\nWould you like audio output? Please enter 'Y' for yes or 'N' for no:")
 
 #TODO: prevent key presses from appearing on the command line
 while True:
     if keyboard.is_pressed('y'):
-        print("You entered 'yes'.\n")
+        print("You entered 'Yes'.\n")
         voice_generation = True
         break
     elif keyboard.is_pressed('n'):
-        print("You entered 'no'.\n")
+        print("You entered 'No'.\n")
         voice_generation = False
         break
 
@@ -61,8 +65,12 @@ while True:
         if mic_result == '':
             print("[red]Did not receive any input from your microphone!")
             continue
+        
+        ''' TODO: vague implementation
+                if keyboard.on_release('f4'):
+            openai_result = openai_manager.chat_with_history(mic_result)
+        '''
 
-        openai_result = openai_manager.chat_with_history(mic_result)
 
     elif keyboard.is_pressed('t'):
         print("User pressed 'T' key!")
@@ -70,6 +78,7 @@ while True:
         
         openai_result = openai_manager.chat_with_history(text_result)
 
+    #TODO: Improved keyboard interupt
     elif keyboard.is_pressed('esc'):
         print("\n[hot_pink3]Terminating the chat...")
         sys.exit()
@@ -93,4 +102,4 @@ while True:
     print("FINISHED PROCESSING DIALOGUE.\nREADY FOR NEXT INPUT:\n")
     print("Use 'F4' or 'T' to continue the conversation.\nOr use 'Esc' to terminate the program.")
     print("~"*45)
-    
+
